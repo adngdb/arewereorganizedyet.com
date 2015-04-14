@@ -9,15 +9,42 @@ body {
     background-color: black;
     color: white;
 }
-h1 {
+h1, h2 {
     text-align: center;
+}
+h1 {
     font-size: 20.0em;
+}
+ul {
+    list-style-type: none
+}
+.old {
+    text-decoration: line-through;
 }
         </style>
     </head>
 
     <body>
         <h1>YES</h1>
-        <p>(since March 27, 2015)</p>
+        <h2>Days since last reorg: <strong id="last-reorg-days"></strong></h2>
+        <p>
+            <ul>
+                <li>(since April 14, 2015)</li>
+                <li class='old'>(since March 27, 2015)</li>
+            </ul>
+        </p>
+
+        <script>
+var LAST_REORG_DATE = new Date('2015-04-14');
+var NOW = new Date();
+var ONE_DAY = 24 * 60 * 60 * 1000;
+
+
+var daysSinceLastReorg = Math.floor(
+    (NOW.getTime() - LAST_REORG_DATE.getTime()) / ONE_DAY
+);
+
+document.getElementById('last-reorg-days').textContent = daysSinceLastReorg;
+        </script>
     </body>
 </html>
