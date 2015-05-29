@@ -27,6 +27,7 @@ ul {
     <body>
         <h1>YES</h1>
         <h2>Days since last reorg: <strong id="last-reorg-days"></strong></h2>
+        <h2>Expected reorg in <strong id="next-reorg-days"></strong> days</h2>
         <p>
             <ul>
                 <li>(since May 28th, 2015)</li>
@@ -39,6 +40,7 @@ ul {
         </p>
 
         <script>
+var FIRST_REORG_DATE = new Date('2015-03-27');
 var LAST_REORG_DATE = new Date('2015-05-28');
 var NOW = new Date();
 var ONE_DAY = 24 * 60 * 60 * 1000;
@@ -49,6 +51,14 @@ var daysSinceLastReorg = Math.floor(
 );
 
 document.getElementById('last-reorg-days').textContent = daysSinceLastReorg;
+
+var numberOfReorgs = document.getElementsByTagName('li').length;
+var daysToNextReorg = Math.floor(
+    ((NOW.getTime() + (LAST_REORG_DATE.getTime() - FIRST_REORG_DATE.getTime()) / numberOfReorgs) - NOW) / ONE_DAY
+);
+
+document.getElementById('next-reorg-days').textContent = daysToNextReorg
+
         </script>
     </body>
 </html>
