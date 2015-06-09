@@ -41,23 +41,22 @@ ul {
         </p>
 
         <script>
-var FIRST_REORG_DATE = new Date('2015-03-27');
-var LAST_REORG_DATE = new Date('2015-06-05');
-var NOW = new Date();
+var FIRST_REORG_TIME = +new Date('2015-03-27');
+var LAST_REORG_TIME = +new Date('2015-06-05');
+
+var NOW = +new Date();
 var ONE_DAY = 24 * 60 * 60 * 1000;
 
 var jquery = document.getElementById.bind(document);
 
-var daysSinceLastReorg = Math.floor(
-    (NOW.getTime() - LAST_REORG_DATE.getTime()) / ONE_DAY
-);
+var daysSinceLastReorg = Math.floor((NOW - LAST_REORG_TIME) / ONE_DAY);
 
 jquery('last-reorg-days').textContent = daysSinceLastReorg;
 
 var numberOfReorgs = document.getElementsByTagName('li').length;
-var avgTimeBetweenReorgs = (LAST_REORG_DATE.getTime() - FIRST_REORG_DATE.getTime()) / numberOfReorgs;
-var expectedNextReorg = LAST_REORG_DATE.getTime() + avgTimeBetweenReorgs;
-var daysToNextReorg = Math.ceil((expectedNextReorg - NOW.getTime()) / ONE_DAY);
+var avgTimeBetweenReorgs = (LAST_REORG_TIME - FIRST_REORG_TIME) / numberOfReorgs;
+var expectedNextReorg = LAST_REORG_TIME + avgTimeBetweenReorgs;
+var daysToNextReorg = Math.ceil((expectedNextReorg - NOW) / ONE_DAY);
 
 jquery('next-reorg-days').textContent = daysToNextReorg;
 
