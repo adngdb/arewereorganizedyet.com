@@ -41,24 +41,31 @@ ul {
         </p>
 
         <script>
-var FIRST_REORG_DATE = new Date('2015-03-27');
-var LAST_REORG_DATE = new Date('2015-06-05');
-var NOW = new Date();
+var FIRST_REORG_TIME = +new Date('2015-03-27');
+var LAST_REORG_TIME = +new Date('2015-06-05');
+
+function require(name) {
+    switch (name) {
+        case 'jquery': return document.getElementById.bind(document);
+        default: alert('unimplemented library!!!!1!');
+    }
+}
+
+var NOW = +new Date();
 var ONE_DAY = 24 * 60 * 60 * 1000;
 
+var $ = require('jquery');
 
-var daysSinceLastReorg = Math.floor(
-    (NOW.getTime() - LAST_REORG_DATE.getTime()) / ONE_DAY
-);
+var daysSinceLastReorg = Math.floor((NOW - LAST_REORG_TIME) / ONE_DAY);
 
-document.getElementById('last-reorg-days').textContent = daysSinceLastReorg;
+$('last-reorg-days').textContent = daysSinceLastReorg;
 
 var numberOfReorgs = document.getElementsByTagName('li').length;
-var daysToNextReorg = Math.floor(
-    ((NOW.getTime() + (LAST_REORG_DATE.getTime() - FIRST_REORG_DATE.getTime()) / numberOfReorgs) - NOW) / ONE_DAY
-);
+var avgTimeBetweenReorgs = (LAST_REORG_TIME - FIRST_REORG_TIME) / numberOfReorgs;
+var expectedNextReorg = LAST_REORG_TIME + avgTimeBetweenReorgs;
+var daysToNextReorg = Math.ceil((expectedNextReorg - NOW) / ONE_DAY);
 
-document.getElementById('next-reorg-days').textContent = daysToNextReorg
+$('next-reorg-days').textContent = daysToNextReorg;
 
         </script>
     </body>
