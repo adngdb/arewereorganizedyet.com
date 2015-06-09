@@ -46,19 +46,20 @@ var LAST_REORG_DATE = new Date('2015-06-05');
 var NOW = new Date();
 var ONE_DAY = 24 * 60 * 60 * 1000;
 
+var jquery = document.getElementById.bind(document);
 
 var daysSinceLastReorg = Math.floor(
     (NOW.getTime() - LAST_REORG_DATE.getTime()) / ONE_DAY
 );
 
-document.getElementById('last-reorg-days').textContent = daysSinceLastReorg;
+jquery('last-reorg-days').textContent = daysSinceLastReorg;
 
 var numberOfReorgs = document.getElementsByTagName('li').length;
-var daysToNextReorg = Math.floor(
-    ((NOW.getTime() + (LAST_REORG_DATE.getTime() - FIRST_REORG_DATE.getTime()) / numberOfReorgs) - NOW) / ONE_DAY
-);
+var avgTimeBetweenReorgs = (LAST_REORG_DATE.getTime() - FIRST_REORG_DATE.getTime()) / numberOfReorgs;
+var expectedNextReorg = LAST_REORG_DATE.getTime() + avgTimeBetweenReorgs;
+var daysToNextReorg = Math.ceil((expectedNextReorg - NOW.getTime()) / ONE_DAY);
 
-document.getElementById('next-reorg-days').textContent = daysToNextReorg
+jquery('next-reorg-days').textContent = daysToNextReorg;
 
         </script>
     </body>
