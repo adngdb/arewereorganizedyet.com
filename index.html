@@ -3,42 +3,62 @@
     <head>
         <title>Are we reorganized yet?</title>
         <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
 
         <style>
 body {
     background-color: black;
     color: white;
+    margin: 0;
 }
 h1, h2 {
     text-align: center;
 }
 h1 {
-    font-size: 20.0em;
+    font-size: 30vw;
+    margin: 0;
 }
 ul {
-    list-style-type: none
+    list-style-type: none;
+    margin: 0;
+    padding: 1em;
 }
 .old {
     text-decoration: line-through;
 }
+.vbox {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    min-height: 100vh;
+}
+.flex {
+    -webkit-flex: 1;
+    flex: 1;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+}
         </style>
     </head>
 
-    <body>
-        <h1>YES</h1>
+    <body class="vbox">
+        <h1 class="flex">YES</h1>
         <h2>Days since last reorg: <strong id="last-reorg-days"></strong></h2>
         <h2>Expected reorg in <strong id="next-reorg-days"></strong> days</h2>
-        <p>
-            <ul>
-                <li>(since June 5th, 2015)</li>
-                <li class='old'>(since May 28th, 2015)</li>
-                <li class='old'>(since May 20, 2015)</li>
-                <li class='old'>(since May 4, 2015)</li>
-                <li class='old'>(since April 21, 2015)</li>
-                <li class='old'>(since April 14, 2015)</li>
-                <li class='old'>(since March 27, 2015)</li>
-            </ul>
-        </p>
+        <ul>
+            <li>(since June 5th, 2015)</li>
+            <li class='old'>(since May 28th, 2015)</li>
+            <li class='old'>(since May 20, 2015)</li>
+            <li class='old'>(since May 4, 2015)</li>
+            <li class='old'>(since April 21, 2015)</li>
+            <li class='old'>(since April 14, 2015)</li>
+            <li class='old'>(since March 27, 2015)</li>
+        </ul>
 
         <script>
 var FIRST_REORG_TIME = +new Date('2015-03-27');
