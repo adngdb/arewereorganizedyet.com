@@ -47,7 +47,7 @@ ul {
     </head>
 
     <body class="vbox">
-        <h1 class="flex">YES</h1>
+        <h1 id="answer" class="flex">WAIT</h1>
         <h2>Days since last reorg: <strong id="last-reorg-days"></strong></h2>
         <h2>Expected reorg in <strong id="next-reorg-days"></strong> days</h2>
         <ul>
@@ -88,6 +88,7 @@ var daysToNextReorg = Math.ceil((expectedNextReorg - NOW) / ONE_DAY);
 
 $('next-reorg-days').textContent = daysToNextReorg;
 
+$('answer').textContent = daysToNextReorg > 0 ? 'YES' : 'NO';
         </script>
     </body>
 </html>
