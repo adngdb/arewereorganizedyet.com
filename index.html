@@ -113,7 +113,7 @@ var mustache = require('mustache');
 
 $('next-reorg-days').textContent = daysToNextReorg > 0 ?
     mustache.render('in {{days}} days', {days: daysToNextReorg}):
-    mustache.render('{{days}} days ago', {days: daysToNextReorg});
+    mustache.render('{{days}} days ago', {days: -daysToNextReorg});
 
 $('answer').textContent = daysToNextReorg > 0 ? 'YES' : 'NO';
         </script>
