@@ -53,7 +53,7 @@ ul li:first-child {
     <body class="vbox">
         <h1 id="answer" class="flex">WAIT</h1>
         <h2>Days since last reorg: <strong id="last-reorg-days"></strong></h2>
-        <h2>Expected reorg in <strong id="next-reorg-days"></strong> days</h2>
+        <h2>Expected reorg <strong id="next-reorg-days"></strong></h2>
         <ul>
             <li>(since April 15th, 2016)</li>
             <li>(since March 21st, 2016)</li>
@@ -85,6 +85,12 @@ var LAST_REORG_TIME = +new Date('2016-04-15');
 function require(name) {
     switch (name) {
         case 'jquery': return document.getElementById.bind(document);
+        case 'mustache': return { render: function(str, obj) {
+            var ret = str;
+            for (var key in obj)
+                ret = ret.replace('{{' + key + '}}', obj[key]);
+            return ret;
+        } }
         default: alert('unimplemented library!!!!1!');
     }
 }
@@ -103,7 +109,11 @@ var avgTimeBetweenReorgs = (LAST_REORG_TIME - FIRST_REORG_TIME) / numberOfReorgs
 var expectedNextReorg = LAST_REORG_TIME + avgTimeBetweenReorgs;
 var daysToNextReorg = Math.ceil((expectedNextReorg - NOW) / ONE_DAY);
 
-$('next-reorg-days').textContent = daysToNextReorg;
+var mustache = require('mustache');
+
+$('next-reorg-days').textContent = daysToNextReorg > 0 ?
+    mustache.render('in {{days}} days', {days: daysToNextReorg}):
+    mustache.render('{{days}} days ago', {days: daysToNextReorg});
 
 $('answer').textContent = daysToNextReorg > 0 ? 'YES' : 'NO';
         </script>
