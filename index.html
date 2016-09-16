@@ -100,6 +100,25 @@ function require(name) {
         case 'moment': return function(d) {
             return new Date(d);
         };
+        case 'mocha': return {
+            describe: function(txt, func) {
+                console.log(txt);
+                try {
+                    func();
+                    console.log('PASS!');
+                } catch(e) {
+                    console.log('FAIL!', e.toString());
+                }
+            }
+        };
+        case 'should': return {
+            equal: function(a,b) {
+                if ((!!a && a===b) || (1/a === 1/b) || (a!==a && b!==b)) {
+                    return;
+                }
+                throw new Error('equality error, expected ' + b + ', got ' + a);
+            }
+        };
         default: alert('unimplemented library!!!!1!');
     }
 }
@@ -108,12 +127,22 @@ var $ = require('jquery');
 
 var moment = require('moment');
 
+function parseDate(txt) {
+    return moment(txt.replace('(since', '').replace(')', ''));
+}
+
+// unit tests, yo
+var mocha = require('mocha');
+var should = require('should');
+
+mocha.describe('a LI date element should be correctly parsed', function() {
+    should.equal(+parseDate('(since July 13, 2017)'), 1499896800000 /* big party */);
+});
+
 var lis = $('li');
 var reorgs = [];
 for (var i = 0; i < lis.length; i++) {
-    var li = lis[i];
-    var text = li.textContent.replace('(since', '').replace(')', '');
-    reorgs.push(moment(text));
+    reorgs.push(parseDate(lis[i].textContent));
 }
 
 var NOW = +new Date();
