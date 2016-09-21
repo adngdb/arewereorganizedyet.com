@@ -55,26 +55,26 @@ ul li:first-child {
         <h2>Days since last reorg: <strong id="last-reorg-days"></strong></h2>
         <h2>Expected reorg <strong id="next-reorg-days"></strong></h2>
         <ul>
-            <li>(since September 15th, 2016)</li>
-            <li>(since August 31th, 2016)</li>
-            <li>(since May 23th, 2016)</li>
-            <li>(since May 13th, 2016)</li>
-            <li>(since April 15th, 2016)</li>
-            <li>(since March 21st, 2016)</li>
-            <li>(since March 18th, 2016)</li>
-            <li>(since January 20th, 2016)</li>
-            <li>(since December 8th, 2015)</li>
-            <li>(since December 2nd, 2015)</li>
-            <li>(since November 17th, 2015)</li>
-            <li>(since October 15th, 2015)</li>
-            <li>(since October 12th, 2015)</li>
-            <li>(since September 18th, 2015)</li>
-            <li>(since August 27th, 2015)</li>
-            <li>(since August 26th, 2015)</li>
-            <li>(since July 2nd, 2015)</li>
-            <li>(since June 18th, 2015)</li>
-            <li>(since June 5th, 2015)</li>
-            <li>(since May 28th, 2015)</li>
+            <li>(since September 15, 2016)</li>
+            <li>(since August 31, 2016)</li>
+            <li>(since May 23, 2016)</li>
+            <li>(since May 13, 2016)</li>
+            <li>(since April 15, 2016)</li>
+            <li>(since March 21, 2016)</li>
+            <li>(since March 18, 2016)</li>
+            <li>(since January 20, 2016)</li>
+            <li>(since December 8, 2015)</li>
+            <li>(since December 2, 2015)</li>
+            <li>(since November 17, 2015)</li>
+            <li>(since October 15, 2015)</li>
+            <li>(since October 12, 2015)</li>
+            <li>(since September 18, 2015)</li>
+            <li>(since August 27, 2015)</li>
+            <li>(since August 26, 2015)</li>
+            <li>(since July 2, 2015)</li>
+            <li>(since June 18, 2015)</li>
+            <li>(since June 5, 2015)</li>
+            <li>(since May 28, 2015)</li>
             <li>(since May 20, 2015)</li>
             <li>(since May 4, 2015)</li>
             <li>(since April 21, 2015)</li>
@@ -83,43 +83,89 @@ ul li:first-child {
         </ul>
 
         <script>
-var FIRST_REORG_TIME = +new Date('2015-03-27');
-var LAST_REORG_TIME = +new Date('2016-09-15');
 
 function require(name) {
     switch (name) {
-        case 'jquery': return document.getElementById.bind(document);
+        case 'jquery': return function(key) {
+            if (key[0] === '#')
+                return document.getElementById(key.substring(1, key.length));
+            return document.getElementsByTagName(key);
+        };
         case 'mustache': return { render: function(str, obj) {
             var ret = str;
             for (var key in obj)
                 ret = ret.replace('{{' + key + '}}', obj[key]);
             return ret;
-        } }
+        } };
+        case 'moment': return function(d) {
+            return new Date(d);
+        };
+        case 'mocha': return {
+            describe: function(txt, func) {
+                console.log(txt);
+                try {
+                    func();
+                    console.log('PASS!');
+                } catch(e) {
+                    console.log('FAIL!', e.toString());
+                }
+            }
+        };
+        case 'should': return {
+            equal: function(a,b) {
+                if ((!!a && a===b) || (1/a === 1/b) || (a!==a && b!==b)) {
+                    return;
+                }
+                throw new Error('equality error, expected ' + b + ', got ' + a);
+            }
+        };
         default: alert('unimplemented library!!!!1!');
     }
+}
+
+var $ = require('jquery');
+
+var moment = require('moment');
+
+function parseDate(txt) {
+    return moment(txt.replace('(since', '').replace(')', ''));
+}
+
+// unit tests, yo
+var mocha = require('mocha');
+var should = require('should');
+
+mocha.describe('a LI date element should be correctly parsed', function() {
+    should.equal(+parseDate('(since July 13, 2017)'), 1499896800000 /* big party */);
+});
+
+var lis = $('li');
+var reorgs = [];
+for (var i = 0; i < lis.length; i++) {
+    reorgs.push(parseDate(lis[i].textContent));
 }
 
 var NOW = +new Date();
 var ONE_DAY = 24 * 60 * 60 * 1000;
 
-var $ = require('jquery');
+var lastReorg = +reorgs[0];
+var firstReorg = +reorgs[reorgs.length - 1];
 
-var daysSinceLastReorg = Math.floor((NOW - LAST_REORG_TIME) / ONE_DAY);
+var daysSinceLastReorg = Math.floor((NOW - lastReorg) / ONE_DAY);
+$('#last-reorg-days').textContent = daysSinceLastReorg;
 
-$('last-reorg-days').textContent = daysSinceLastReorg;
+var avgTimeBetweenReorgs = (lastReorg - firstReorg) / reorgs.length;
 
-var numberOfReorgs = document.getElementsByTagName('li').length;
-var avgTimeBetweenReorgs = (LAST_REORG_TIME - FIRST_REORG_TIME) / numberOfReorgs;
-var expectedNextReorg = LAST_REORG_TIME + avgTimeBetweenReorgs;
+var expectedNextReorg = lastReorg + avgTimeBetweenReorgs;
 var daysToNextReorg = Math.ceil((expectedNextReorg - NOW) / ONE_DAY);
 
 var mustache = require('mustache');
 
-$('next-reorg-days').textContent = daysToNextReorg > 0 ?
+$('#next-reorg-days').textContent = daysToNextReorg > 0 ?
     mustache.render('in {{days}} days', {days: daysToNextReorg}):
     mustache.render('{{days}} days ago', {days: -daysToNextReorg});
 
-$('answer').textContent = daysToNextReorg > 0 ? 'YES' : 'NO';
+$('#answer').textContent = daysToNextReorg > 0 ? 'YES' : 'NO';
         </script>
 
         <!-- Piwik -->
