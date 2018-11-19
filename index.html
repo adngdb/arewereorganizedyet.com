@@ -175,12 +175,13 @@ var avgTimeBetweenReorgs = (lastReorg - firstReorg) / reorgs.length;
 
 var expectedNextReorg = lastReorg + avgTimeBetweenReorgs;
 var daysToNextReorg = Math.ceil((expectedNextReorg - NOW) / ONE_DAY);
+var daysUnit = Math.abs(daysToNextReorg) === 1 ? "day": "days";
 
 var mustache = require('mustache');
 
 $('#next-reorg-days').textContent = daysToNextReorg > 0 ?
-    mustache.render('in {{days}} days', {days: daysToNextReorg}):
-    mustache.render('{{days}} days ago', {days: -daysToNextReorg});
+    mustache.render('in {{days}} {{unit}}', {days: daysToNextReorg, unit: daysUnit}):
+    mustache.render('{{days}} {{unit}} ago', {days: -daysToNextReorg, unit: daysUnit});
 
 $('#answer').textContent = daysToNextReorg > 0 ? 'YES' : 'NO';
         </script>
