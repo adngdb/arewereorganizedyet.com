@@ -185,7 +185,13 @@ var firstReorg = +reorgs[reorgs.length - 1];
 var daysSinceLastReorg = Math.floor((NOW - lastReorg) / ONE_DAY);
 $('#last-reorg-days').textContent = daysSinceLastReorg;
 
-var avgTimeBetweenReorgs = (lastReorg - firstReorg) / reorgs.length;
+let avgTimeBetweenReorgs;
+if (reorgs.length == 1) {
+    // Only one reorg so far, assume reorg every 8 weeks.
+    avgTimeBetweenReorgs = 8 * 7 * ONE_DAY;
+} else {
+    avgTimeBetweenReorgs = (lastReorg - firstReorg) / (reorgs.length - 1);
+}
 
 var expectedNextReorg = lastReorg + avgTimeBetweenReorgs;
 var daysToNextReorg = Math.ceil((expectedNextReorg - NOW) / ONE_DAY);
