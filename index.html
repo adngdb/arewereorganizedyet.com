@@ -122,12 +122,6 @@ function require(name) {
                 return document.getElementById(key.substring(1, key.length));
             return document.getElementsByTagName(key);
         };
-        case 'mustache': return { render: function(str, obj) {
-            var ret = str;
-            for (var key in obj)
-                ret = ret.replace('{{' + key + '}}', obj[key]);
-            return ret;
-        } };
         case 'moment': return function(d) {
             return new Date(d);
         };
@@ -212,13 +206,13 @@ if (expectedNextReorgDay.getDay() == 6) {
 }
 
 var daysToNextReorg = Math.ceil((expectedNextReorg - NOW) / ONE_DAY);
-var daysUnit = Math.abs(daysToNextReorg) === 1 ? "day": "days";
 
-var mustache = require('mustache');
+const relativeTimeFormatter = new Intl.RelativeTimeFormat("en", {
+    numeric: "always",
+    style: "long",
+});
 
-let nextReorgText = daysToNextReorg > 0 ?
-    mustache.render('in {{days}} {{unit}}', {days: daysToNextReorg, unit: daysUnit}):
-    mustache.render('{{days}} {{unit}} ago', {days: -daysToNextReorg, unit: daysUnit});
+let nextReorgText = relativeTimeFormatter.format(daysToNextReorg, "day");
 nextReorgText += " (" + (new Date(expectedNextReorg)).toDateString() + ")";
 
 $('#next-reorg-days').textContent = nextReorgText;
