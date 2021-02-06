@@ -170,14 +170,22 @@ mocha.describe('a LI date element should be correctly parsed', function() {
     should.equal(+parseDate('(since July 13, 2017)'), 1499896800000 /* big party */);
 });
 
+var NOW = +new Date();
+var ONE_DAY = 24 * 60 * 60 * 1000;
+
 var lis = $('li');
 var reorgs = [];
 for (var i = 0; i < lis.length; i++) {
     reorgs.push(parseDate(lis[i].textContent));
+    // Only use recent reorgs from the last 2 years if there were 10 reorgs
+    // or use the last 10 reorgs (exceeding the past 2 years).
+    if (reorgs.length == 10) {
+        break;
+    }
+    if ((+reorgs[0] - +reorgs[reorgs.length - 1]) / ONE_DAY > 2 * 365) {
+        break;
+    }
 }
-
-var NOW = +new Date();
-var ONE_DAY = 24 * 60 * 60 * 1000;
 
 var lastReorg = +reorgs[0];
 var firstReorg = +reorgs[reorgs.length - 1];
