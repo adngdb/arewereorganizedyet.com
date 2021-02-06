@@ -216,9 +216,12 @@ var daysUnit = Math.abs(daysToNextReorg) === 1 ? "day": "days";
 
 var mustache = require('mustache');
 
-$('#next-reorg-days').textContent = daysToNextReorg > 0 ?
+let nextReorgText = daysToNextReorg > 0 ?
     mustache.render('in {{days}} {{unit}}', {days: daysToNextReorg, unit: daysUnit}):
     mustache.render('{{days}} {{unit}} ago', {days: -daysToNextReorg, unit: daysUnit});
+nextReorgText += " (" + (new Date(expectedNextReorg)).toDateString() + ")";
+
+$('#next-reorg-days').textContent = nextReorgText;
 
 $('#answer').textContent = daysToNextReorg > 0 ? 'YES' : 'NO';
         </script>
