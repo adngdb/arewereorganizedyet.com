@@ -2,7 +2,7 @@
 
 Are we reorganized yet?
 
-## Licence
+## License
 
 http://www.wtfpl.net/
 
